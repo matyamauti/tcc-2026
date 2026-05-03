@@ -1,4 +1,4 @@
-# 📄 PRD —  Sistema de Reconhecimento Automatizado de Vestimenta com IA
+# 📄 PRD 2.0 —  Sistema de Reconhecimento Automatizado de Vestimenta com IA
 
 ---
 
