@@ -67,11 +67,15 @@ Implementação de um sistema autônomo baseado em IA que:
 - Inferência com Hailo-8L  
 - Classificação de vestimenta  
 - Emissão de alertas  
+- Comunicação de mensagens via protocolo MQTT
+- Dashboard Web (React / Node-RED / HTML) para monitoramento em tempo real
+- Acionamento de hardware externo (Relé / Sirene / Luz) via Microcontrolador (Raspberry Pi Pico)
+- Armazenamento de eventos e relatórios em Banco de Dados
 
 ###  Excluído
 
 - Reconhecimento facial  
-- Armazenamento de imagens  
+- Armazenamento de imagens (salvamos apenas os eventos no Banco de Dados)
 - Identificação de usuários  
 
 ---
@@ -89,6 +93,11 @@ O sistema deve classificar a vestimenta como:
 - Adequada  
 - Inadequada  
 
+Adicionalmente, a lógica da IA deve realizar:
+- Análise de exposição da pele (%)
+- Identificação do tipo de vestimenta (ex: manga curta, manga longa)
+- Identificação de EPI (completo / incompleto)
+
 ### RF-04 — Regras de validação  
 O sistema deve identificar como inadequado:
 - Uso de shorts  
@@ -103,6 +112,12 @@ O sistema deve emitir:
 
 ### RF-06 — Operação contínua  
 O sistema deve operar automaticamente sem intervenção manual.
+
+### RF-07 — Dashboard Web
+O sistema deve prover uma interface web para exibir detecções em tempo real, relatórios, histórico de eventos e configurações.
+
+### RF-08 — Comunicação MQTT
+O sistema deve utilizar uma fila de mensagens MQTT para integrar a câmera, o processamento, o dashboard e os dispositivos de acionamento.
 
 ---
 
@@ -131,19 +146,38 @@ O sistema deve operar automaticamente sem intervenção manual.
 
 ##  9. Arquitetura do Sistema
 
-### Entrada
-- Câmera HBVCAM IMX586  
+![Fluxo do Sistema e Camadas](./diagrama_sistema.jpg)
+*Figura 1: Fluxo do Sistema e Camadas*
 
-### Processamento
-- Raspberry Pi 5  
-- Hailo-8L  
+### 9.1 Camadas do Sistema
 
-### IA
-- Modelo YOLO (ou equivalente)  
+A arquitetura está dividida em 4 camadas principais:
 
-### Saída
-- Alertas visuais  
-- Alertas sonoros  
+1. **Camada Física**:
+   - Câmera (Captura de imagem)
+   - Relé (Acionamento via Raspberry Pi Pico / Microcontrolador)
+   - Iluminação / Alarme (Sinalização sonora e visual)
+2. **Camada de Processamento**:
+   - Raspberry Pi 5 (Processamento e controle)
+   - Hailo-8L (Aceleração de IA - 26TOPS)
+3. **Camada Lógica (IA)**:
+   - Regras de decisão e análise de imagem (Visão Computacional / YOLO)
+   - Detecção de EPI e vestimentas inadequadas (Exposição da pele, tipo de vestimenta)
+   - Geração de alertas
+4. **Camada de Interface**:
+   - Dashboard web (Detecções em tempo real, relatórios, histórico e configurações)
+   - Banco de Dados (Armazenamento de eventos e relatórios)
+
+### 9.2 Comunicação e Fluxos (MQTT)
+
+![Arquitetura MQTT](./diagrama_mqtt.jpg)
+*Figura 2: Fluxo de Funcionamento e Arquitetura MQTT*
+
+O sistema utiliza o protocolo MQTT como fila de mensagens para a integração assíncrona dos componentes, através dos seguintes tópicos:
+
+- `/camera/imagem`: A câmera captura imagens continuamente e o Raspberry Pi 5 (após o processamento da IA) publica os resultados da detecção e eventos neste tópico.
+- `/dashboard/atualizar`: O Dashboard web se inscreve neste tópico para exibir informações em tempo real sobre eventos, alertas e status do sistema.
+- `/sirene/acionar`: Tópico dedicado ao acionamento. O sistema ou regras de negócio publicam "ON" ou "OFF" neste tópico. O Microcontrolador (Raspberry Pi Pico), inscrito nele, recebe a mensagem e ativa/desativa a sirene e os relés da camada física.
 
 ---
 
@@ -165,6 +199,10 @@ O sistema deve operar automaticamente sem intervenção manual.
 - YOLO  
 - SDK Hailo  
 - Linux 
+- Comunicação: MQTT
+- Frontend/Dashboard: React / Node-RED / HTML
+- Armazenamento: Banco de Dados
+- Hardware de Acionamento: Raspberry Pi Pico (Relé)
 
 
 ---
