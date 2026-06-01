@@ -1,0 +1,13 @@
+train: ../train/images
+val: ../valid/images
+test: ../test/images
+
+nc: 1
+names: ['Shorts']
+
+roboflow:
+  workspace: tcc-workspace-jdnqm
+  project: shorts-k08dv-votpw
+  version: 1
+  license: CC BY 4.0
+  url: https://universe.roboflow.com/tcc-workspace-jdnqm/shorts-k08dv-votpw/dataset/1
