@@ -63,3 +63,80 @@ Autor: **Matheus Yamauti**
 ## 📄 Licença
 
 Uso acadêmico.
+
+---
+
+## Integração com Backend
+
+O frontend busca os dados em uma API configurada por variáveis de ambiente.
+
+Crie um arquivo `.env` na pasta `frontEnd`:
+
+```env
+VITE_API_BASE_URL=http://localhost:8000
+VITE_API_REFRESH_MS=5000
+```
+
+### Endpoints esperados
+
+`GET /api/detections/latest`
+
+```json
+{
+  "id": "evt-001",
+  "camera_id": "CAM_01_LABORATORIO",
+  "timestamp": "2026-06-02T12:00:00Z",
+  "is_alert": true,
+  "status": "Incompleto",
+  "type": "Shorts",
+  "exposure": 23,
+  "confidence": 99,
+  "message": "Vestimenta inadequada",
+  "snapshot_url": "http://localhost:8000/static/latest.jpg",
+  "stream_url": "http://localhost:8000/video_feed",
+  "boxes": [
+    {
+      "label": "SHORTS",
+      "confidence": 99,
+      "x": 37,
+      "y": 40,
+      "width": 8,
+      "height": 12
+    }
+  ]
+}
+```
+
+`GET /api/detections?limit=50`
+
+Pode retornar um array direto ou um objeto com `items`, `detections` ou `results`.
+
+```json
+[
+  {
+    "id": "evt-001",
+    "timestamp": "2026-06-02T12:00:00Z",
+    "is_alert": true,
+    "type": "Shorts",
+    "status": "Incompleto",
+    "exposure": 23
+  }
+]
+```
+
+`GET /api/summary`
+
+```json
+{
+  "total_today": 1432,
+  "critical_alerts": 12,
+  "connection_status": "online"
+}
+```
+
+### Observações
+
+- Enquanto a API não responde, o painel continua funcionando com dados locais de fallback.
+- O frontend aceita `snake_case` e `camelCase` para os principais campos.
+- As coordenadas das caixas (`x`, `y`, `width`, `height`) devem estar em porcentagem relativa à imagem, de `0` a `100`.
+- Para stream MJPEG do OpenCV/Flask/FastAPI, envie a URL em `stream_url`; para imagem estática, envie `snapshot_url`.
