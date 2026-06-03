@@ -1,9 +1,7 @@
 import React from 'react';
 import { Database, Layers, LayoutDashboard, Camera, FileText, History, Settings } from 'lucide-react';
 
-export function BottomCards({ summary, isMock, error }) {
-  const isOnline = !error && String(summary?.connectionStatus || '').toLowerCase() !== 'offline';
-
+export function BottomCards() {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pb-6">
       <div className="bg-slate-900/60 border border-slate-700/50 rounded-2xl p-6 shadow-xl backdrop-blur-sm hover:bg-slate-800/60 transition-colors group">
@@ -19,20 +17,20 @@ export function BottomCards({ summary, isMock, error }) {
         <div className="space-y-3.5 mt-6">
           <div className="flex justify-between items-center text-sm border-b border-slate-800 pb-3">
             <span className="text-slate-400 font-medium">Registros Totais (Hoje)</span>
-            <span className="text-white font-mono">{Number(summary?.totalToday || 0).toLocaleString('pt-BR')}</span>
+            <span className="text-white font-mono">1,432</span>
           </div>
           <div className="flex justify-between items-center text-sm border-b border-slate-800 pb-3">
             <span className="text-slate-400 font-medium">Alertas Críticos</span>
-            <span className="text-red-400 font-mono font-bold">{Number(summary?.criticalAlerts || 0).toLocaleString('pt-BR')}</span>
+            <span className="text-red-400 font-mono font-bold">12</span>
           </div>
           <div className="flex justify-between items-center text-sm pt-1">
             <span className="text-slate-400 font-medium">Status da Conexão</span>
-            <span className={`${isOnline ? 'text-green-400' : 'text-orange-400'} flex items-center gap-1.5 font-medium`}>
+            <span className="text-green-400 flex items-center gap-1.5 font-medium">
               <span className="relative flex h-2 w-2">
-                <span className={`animate-ping absolute inline-flex h-full w-full rounded-full ${isOnline ? 'bg-green-400' : 'bg-orange-400'} opacity-75`}></span>
-                <span className={`relative inline-flex rounded-full h-2 w-2 ${isOnline ? 'bg-green-500' : 'bg-orange-500'}`}></span>
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
               </span>
-              {isMock ? 'Fallback' : isOnline ? 'Online' : 'Offline'}
+              Online
             </span>
           </div>
         </div>
