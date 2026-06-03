@@ -7,10 +7,12 @@ import { Detections } from './pages/Detections';
 import { Reports } from './pages/Reports';
 import { History } from './pages/History';
 import { Settings } from './pages/Settings';
+import { useDetectionDashboard } from './hooks/useDetectionDashboard';
 
 function App() {
   const [currentTime, setCurrentTime] = useState(new Date().toLocaleTimeString('pt-BR'));
   const [currentDate, setCurrentDate] = useState(new Date().toLocaleDateString('pt-BR'));
+  const detectionDashboard = useDetectionDashboard();
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -30,11 +32,14 @@ function App() {
 
           <div className="p-6 lg:p-10 space-y-6 flex-1 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-slate-900 via-slate-950 to-slate-950">
             <Routes>
-              <Route path="/" element={<Dashboard currentDate={currentDate} currentTime={currentTime} />} />
-              <Route path="/detections" element={<Detections />} />
-              <Route path="/reports" element={<Reports currentTime={currentTime} />} />
-              <Route path="/history" element={<History />} />
-              <Route path="/settings" element={<Settings />} />
+              <Route
+                path="/"
+                element={<Dashboard currentDate={currentDate} currentTime={currentTime} dashboard={detectionDashboard} />}
+              />
+              <Route path="/detections" element={<Detections dashboard={detectionDashboard} />} />
+              <Route path="/reports" element={<Reports dashboard={detectionDashboard} />} />
+              <Route path="/history" element={<History dashboard={detectionDashboard} />} />
+              <Route path="/settings" element={<Settings dashboard={detectionDashboard} />} />
             </Routes>
           </div>
         </main>
